@@ -1,8 +1,10 @@
 package com.example.urlshortner
 
+import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -28,6 +30,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
     var binding: ActivityMainBinding? = null
+    lateinit var dialog: Dialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -64,10 +67,21 @@ class MainActivity : AppCompatActivity() {
         if(long_link.isEmpty()){
             Toast.makeText(this, "Please Enter Your URL!", Toast.LENGTH_SHORT).show()
         }else{
+            lauchDialog()
             CoroutineScope(Dispatchers.IO).launch {
                 callapi(long_link)
             }
         }
+    }
+
+    private fun lauchDialog() {
+        dialog = Dialog(this)
+        dialog.setContentView(R.layout.dialog_loading)
+        dialog.setCancelable(false)
+        if(dialog.window != null){
+            dialog!!.window!!.setBackgroundDrawable(ColorDrawable(0))
+        }
+        dialog.show()
     }
 
     suspend fun callapi(long_link: String) {
@@ -82,6 +96,7 @@ class MainActivity : AppCompatActivity() {
         yield()
         call.enqueue(object : Callback<RecievedLink>{
             override fun onResponse(call: Call<RecievedLink>, response: Response<RecievedLink>) {
+                dialog.dismiss()
                 val response: RecievedLink? = response.body()
                 val json_from_response = Gson().toJson(response)
                 val short_link_object = Gson().fromJson(json_from_response, RecievedLink::class.java)
@@ -91,6 +106,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<RecievedLink>, t: Throwable) {
+                dialog.dismiss()
                 binding?.llForLink?.visibility = View.VISIBLE
                 binding?.textView?.text = "Server Down!"
             }
