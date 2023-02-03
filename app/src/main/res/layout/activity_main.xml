@@ -52,7 +52,7 @@
         android:layout_marginStart="15dp"
         android:hint="Enter Long URL!"
         app:counterEnabled="true"
-        app:counterMaxLength="150"
+        app:counterMaxLength="250"
         app:startIconDrawable="@drawable/insert_link"
         android:layout_marginEnd="15dp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -65,24 +65,46 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout
+        android:id="@+id/ll_for_link"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="25dp"
         android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        tools:visibility="visible"
+        android:visibility="gone"
         >
         <TextView
             tools:visibility="visible"
-            android:visibility="gone"
             android:id="@+id/text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="https://goolnk.com/AqJYaW"
             android:textSize="20sp"
+            android:layout_weight="1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/open_to_chrome_icon"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="5dp"
+            android:src="@drawable/open_to_chrome_icon"
+            android:layout_gravity="center_vertical"
+            />
+        <TextView
+            android:id="@+id/copy_to_clipboard_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Copy"
+            android:padding="3dp"
+            android:background="@drawable/copy_btn_background"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="3dp"
+            android:textSize="12sp"/>
     </LinearLayout>
 
 

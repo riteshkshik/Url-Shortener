@@ -1,5 +1,9 @@
 package com.example.urlshortner
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -32,17 +36,36 @@ class MainActivity : AppCompatActivity() {
         binding?.btnShortUrl?.setOnClickListener {
             validateLink()
         }
+        binding?.openToChromeIcon?.setOnClickListener {
+            openChrome()
+        }
+        binding?.copyToClipboardBtn?.setOnClickListener {
+            copyToClipBoard()
+        }
+    }
+
+    private fun openChrome() {
+        val openURL = Intent(Intent.ACTION_VIEW)
+        val url = binding?.textView?.text.toString()
+        openURL.data = Uri.parse(url)
+        startActivity(openURL)
+    }
+
+    private fun copyToClipBoard() {
+        var clipBardManager: ClipboardManager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+        clipBardManager.setPrimaryClip(ClipData.newPlainText("Shorted Link",binding?.textView?.text.toString()))
+        binding?.copyToClipboardBtn?.text = "Copied!"
     }
 
     fun validateLink(){
         val long_link: String = binding?.editText?.text.toString()
-        binding?.textView?.visibility = View.VISIBLE
-        binding?.textView?.text = "https://goolnk.com/AqJYaW"
+//        binding?.llForLink?.visibility = View.VISIBLE
+//        binding?.textView?.text = "https://goolnk.com/AqJYaW"
         if(long_link.isEmpty()){
             Toast.makeText(this, "Please Enter Your URL!", Toast.LENGTH_SHORT).show()
         }else{
             CoroutineScope(Dispatchers.IO).launch {
-                //callapi(long_link)
+                callapi(long_link)
             }
         }
     }
@@ -63,11 +86,12 @@ class MainActivity : AppCompatActivity() {
                 val json_from_response = Gson().toJson(response)
                 val short_link_object = Gson().fromJson(json_from_response, RecievedLink::class.java)
                 //Log.e("skhfakhdksahfaksdhfk", short_link_object.result_url)
-                binding?.textView?.visibility = View.VISIBLE
+                binding?.llForLink?.visibility = View.VISIBLE
                 binding?.textView?.text = short_link_object.result_url
             }
 
             override fun onFailure(call: Call<RecievedLink>, t: Throwable) {
+                binding?.llForLink?.visibility = View.VISIBLE
                 binding?.textView?.text = "Server Down!"
             }
         })
