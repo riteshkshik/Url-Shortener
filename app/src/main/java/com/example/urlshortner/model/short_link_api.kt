@@ -2,9 +2,7 @@ package com.example.urlshortner.model
 
 import retrofit2.Call
 import retrofit2.http.Body
-import retrofit2.http.FormUrlEncoded
 import retrofit2.http.Headers
-import retrofit2.http.Multipart
 import retrofit2.http.POST
 
 interface short_link_api {
@@ -14,5 +12,5 @@ interface short_link_api {
         "X-RapidAPI-Host: url-shortener-service.p.rapidapi.com"
     )
     @POST("shorten")
-    fun sendLink(@Body url : response) : Call<testtest>
+    fun sendLink(@Body url : sendLink) : Call<RecievedLink>
 }

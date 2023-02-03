@@ -1,3 +1,3 @@
 package com.example.urlshortner.model
 
-data class response(var url : String)
+data class sendLink(var url : String)
