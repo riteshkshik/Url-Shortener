@@ -10,8 +10,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.webkit.URLUtil.isValidUrl
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.widget.doOnTextChanged
 import com.example.urlshortner.databinding.ActivityMainBinding
 import com.example.urlshortner.model.sendLink
 import com.example.urlshortner.model.short_link_api
@@ -27,6 +29,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.Exception
+import java.net.URL
 
 class MainActivity : AppCompatActivity() {
     var binding: ActivityMainBinding? = null
@@ -45,6 +49,9 @@ class MainActivity : AppCompatActivity() {
         binding?.copyToClipboardBtn?.setOnClickListener {
             copyToClipBoard()
         }
+        binding?.editText?.doOnTextChanged { text, start, before, count ->
+            binding?.tilEditText?.error = null
+        }
     }
 
     private fun openChrome() {
@@ -62,10 +69,12 @@ class MainActivity : AppCompatActivity() {
 
     fun validateLink(){
         val long_link: String = binding?.editText?.text.toString()
-//        binding?.llForLink?.visibility = View.VISIBLE
-//        binding?.textView?.text = "https://goolnk.com/AqJYaW"
+
         if(long_link.isEmpty()){
             Toast.makeText(this, "Please Enter Your URL!", Toast.LENGTH_SHORT).show()
+        }else if(!isValidUrl(long_link)){
+            Toast.makeText(this, "URL is not Valid!", Toast.LENGTH_SHORT).show()
+            binding?.tilEditText?.error = "Enter A Valid URL!"
         }else{
             lauchDialog()
             CoroutineScope(Dispatchers.IO).launch {
