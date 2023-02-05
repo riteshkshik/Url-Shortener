@@ -35,6 +35,7 @@ import java.net.URL
 class MainActivity : AppCompatActivity() {
     var binding: ActivityMainBinding? = null
     lateinit var dialog: Dialog
+    var short_url: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -56,21 +57,37 @@ class MainActivity : AppCompatActivity() {
 
     private fun openChrome() {
         val openURL = Intent(Intent.ACTION_VIEW)
-        val url = binding?.textView?.text.toString()
-        openURL.data = Uri.parse(url)
-        startActivity(openURL)
+        if(short_url != null){
+            openURL.data = Uri.parse(short_url.toString())
+            startActivity(openURL)
+        }else{
+            Toast.makeText(this, "Something Went Wrong!", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun copyToClipBoard() {
         var clipBardManager: ClipboardManager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-        clipBardManager.setPrimaryClip(ClipData.newPlainText("Shorted Link",binding?.textView?.text.toString()))
-        //binding?.copyToClipboardBtn?.text = "Copied!"
-        binding?.copyToClipboardBtn?.setImageResource(R.drawable.copy_done_icon_png)
+        if(short_url != null){
+            clipBardManager.setPrimaryClip(ClipData.newPlainText("Shorted Link",short_url.toString()))
+            binding?.copyToClipboardBtn?.setImageResource(R.drawable.copy_done_icon_png)
+        }else{
+            Toast.makeText(this, "Something Went Wrong!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun topLevelDomainCheck(url: String): Boolean{
+        val list = arrayOf(".com", "org", ".ru", ".net", ".uk", ".au", ".in", ".de", ".ir", ".ca")
+        for (domain in list){
+            if (url.contains(domain)) return true
+        }
+        return false
     }
 
     fun validateLink(){
-        val long_link: String = binding?.editText?.text.toString()
-
+        var long_link: String = binding?.editText?.text.toString()
+        if(topLevelDomainCheck(long_link)){
+            long_link = "https://$long_link"
+        }
         if(long_link.isEmpty()){
             binding?.tilEditText?.error = "URL Can't Be Empty!"
             Toast.makeText(this, "Please Enter Your URL!", Toast.LENGTH_SHORT).show()
@@ -111,9 +128,8 @@ class MainActivity : AppCompatActivity() {
                 val response: RecievedLink? = response.body()
                 val json_from_response = Gson().toJson(response)
                 val short_link_object = Gson().fromJson(json_from_response, RecievedLink::class.java)
-                //Log.e("skhfakhdksahfaksdhfk", short_link_object.result_url)
                 binding?.llForLink?.visibility = View.VISIBLE
-//                binding?.textView?.text = short_link_object.result_url
+                short_url = short_link_object.result_url
                 binding?.textView?.text = "Your Shorted URL \n is \n ${short_link_object.result_url}"
             }
 
