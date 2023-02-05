@@ -65,48 +65,87 @@
             android:layout_height="wrap_content"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <LinearLayout
-        android:id="@+id/ll_for_link"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="25dp"
         android:layout_marginStart="15dp"
+        app:cardBackgroundColor="#d0f4de"
         android:layout_marginEnd="15dp"
-        tools:visibility="visible"
-        android:visibility="gone"
+        app:cardElevation="10dp"
+        android:layout_marginTop="25dp"
+        app:cardCornerRadius="20dp"
         >
-        <TextView
+        <LinearLayout
+            android:id="@+id/ll_for_link"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="25dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:gravity="center"
             tools:visibility="visible"
-            android:id="@+id/text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="https://goolnk.com/AqJYaW"
-            android:textSize="20sp"
-            android:layout_weight="1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-        <ImageView
-            android:id="@+id/open_to_chrome_icon"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginStart="5dp"
-            android:src="@drawable/open_to_chrome_icon"
-            android:layout_gravity="center_vertical"
-            />
-        <TextView
-            android:id="@+id/copy_to_clipboard_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Copy"
-            android:padding="3dp"
-            android:background="@drawable/copy_btn_background"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="3dp"
-            android:textSize="12sp"/>
-    </LinearLayout>
+            android:visibility="gone"
+            >
+            <TextView
+                tools:visibility="visible"
+                android:id="@+id/text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your Shorted URL \n is \n https://goolnk.com/AqJYaW"
+                android:gravity="center"
+                android:textSize="25sp"
+                android:layout_weight="1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="35dp"
+                android:orientation="horizontal">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/open_to_chrome_icon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    app:civ_border_width="1dp"
+                    app:civ_border_color="@color/white"
+                    android:layout_marginStart="5dp"
+                    android:src="@drawable/browser_png"
+                    android:layout_gravity="center_vertical"
+                    />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/generate_qr_code"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    app:civ_border_width="1dp"
+                    app:civ_border_color="@color/white"
+                    android:layout_marginStart="5dp"
+                    android:src="@drawable/qr_icon_png"
+                    android:layout_gravity="center_vertical"
+                    />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/copy_to_clipboard_btn"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    app:civ_border_width="1dp"
+                    app:civ_border_color="@color/white"
+                    android:layout_marginStart="5dp"
+                    android:src="@drawable/copy_icon_png"
+                    android:layout_gravity="center_vertical"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
 
 
 

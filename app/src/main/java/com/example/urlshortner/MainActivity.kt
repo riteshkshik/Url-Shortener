@@ -64,13 +64,15 @@ class MainActivity : AppCompatActivity() {
     private fun copyToClipBoard() {
         var clipBardManager: ClipboardManager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
         clipBardManager.setPrimaryClip(ClipData.newPlainText("Shorted Link",binding?.textView?.text.toString()))
-        binding?.copyToClipboardBtn?.text = "Copied!"
+        //binding?.copyToClipboardBtn?.text = "Copied!"
+        binding?.copyToClipboardBtn?.setImageResource(R.drawable.copy_done_icon_png)
     }
 
     fun validateLink(){
         val long_link: String = binding?.editText?.text.toString()
 
         if(long_link.isEmpty()){
+            binding?.tilEditText?.error = "URL Can't Be Empty!"
             Toast.makeText(this, "Please Enter Your URL!", Toast.LENGTH_SHORT).show()
         }else if(!isValidUrl(long_link)){
             Toast.makeText(this, "URL is not Valid!", Toast.LENGTH_SHORT).show()
@@ -88,7 +90,7 @@ class MainActivity : AppCompatActivity() {
         dialog.setContentView(R.layout.dialog_loading)
         dialog.setCancelable(false)
         if(dialog.window != null){
-            dialog!!.window!!.setBackgroundDrawable(ColorDrawable(0))
+            dialog.window!!.setBackgroundDrawable(ColorDrawable(0))
         }
         dialog.show()
     }
@@ -111,7 +113,8 @@ class MainActivity : AppCompatActivity() {
                 val short_link_object = Gson().fromJson(json_from_response, RecievedLink::class.java)
                 //Log.e("skhfakhdksahfaksdhfk", short_link_object.result_url)
                 binding?.llForLink?.visibility = View.VISIBLE
-                binding?.textView?.text = short_link_object.result_url
+//                binding?.textView?.text = short_link_object.result_url
+                binding?.textView?.text = "Your Shorted URL \n is \n ${short_link_object.result_url}"
             }
 
             override fun onFailure(call: Call<RecievedLink>, t: Throwable) {
