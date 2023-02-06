@@ -53,6 +53,11 @@ class MainActivity : AppCompatActivity() {
         binding?.editText?.doOnTextChanged { text, start, before, count ->
             binding?.tilEditText?.error = null
         }
+        binding?.generateQrCode?.setOnClickListener {
+            val intent = Intent(this, QrcodeActivity::class.java)
+            intent.putExtra("short_url", short_url)
+            startActivity(intent)
+        }
     }
 
     private fun openChrome() {
