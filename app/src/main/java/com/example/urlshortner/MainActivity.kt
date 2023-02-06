@@ -1,5 +1,6 @@
 package com.example.urlshortner
 
+import android.app.ActionBar
 import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -58,6 +59,20 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("short_url", short_url)
             startActivity(intent)
         }
+        binding?.shareUrl?.setOnClickListener {
+            shareLinkToOtherApp()
+        }
+    }
+
+
+    private fun shareLinkToOtherApp() {
+        val sendIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, short_url)
+            type = "text/plain"
+        }
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)
     }
 
     private fun openChrome() {

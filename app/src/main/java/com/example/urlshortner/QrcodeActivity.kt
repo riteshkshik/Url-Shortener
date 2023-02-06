@@ -1,12 +1,14 @@
 package com.example.urlshortner
 
+import android.R.attr.bitmap
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
+import android.net.Uri
 import android.os.Bundle
-import android.util.Log
+import android.provider.MediaStore
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.urlshortner.databinding.ActivityQrcodeBinding
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
@@ -15,15 +17,19 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import okhttp3.Dispatcher
+import java.io.File
+import java.io.FileOutputStream
+
 
 class QrcodeActivity : AppCompatActivity() {
     var binding: ActivityQrcodeBinding? = null
     var short_url: String? = null
+    var cbitmap: Bitmap? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityQrcodeBinding.inflate(layoutInflater)
         setContentView(binding?.root)
+
         if (intent.hasExtra("short_url")) {
             short_url = intent.getStringExtra("short_url")
             CoroutineScope(Dispatchers.Main).launch {
@@ -32,6 +38,27 @@ class QrcodeActivity : AppCompatActivity() {
         } else {
             Toast.makeText(this, "Something Went Wrong!", Toast.LENGTH_SHORT).show()
         }
+
+        binding?.shareQrCode?.setOnClickListener {
+            if (cbitmap != null) {
+                shareQrToOtherApps()
+            } else {
+                Toast.makeText(this, "Qr Code is Generating!", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun shareQrToOtherApps() {
+        val bitmapPath: String =
+            MediaStore.Images.Media.insertImage(contentResolver, cbitmap, short_url, null)
+        val bitMapUri: Uri = Uri.parse(bitmapPath)
+        val sendIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_STREAM, bitMapUri)
+            type = "image/*"
+        }
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)
     }
 
     suspend fun generate_qr() {
@@ -54,6 +81,7 @@ class QrcodeActivity : AppCompatActivity() {
                 }
                 binding?.qrCode?.setImageBitmap(bitmap)
             }
+            cbitmap = bitmap
 
         } catch (e: WriterException) {
             e.printStackTrace()
